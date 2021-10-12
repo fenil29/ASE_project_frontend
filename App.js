@@ -21,24 +21,31 @@
 // });
 import React from 'react';
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, IconRegistry,Layout, Text } from '@ui-kitten/components';
+import { ApplicationProvider, IconRegistry, Layout, Text } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from './components/Login';
-import Home from './components/Home';
+import MainNavigator from './MainNavigator';
 
-const Stack = createNativeStackNavigator();
+import GlobalState from "./context/GlobalState";
 
 
-export default () => (
-  <NavigationContainer>
-    <IconRegistry icons={EvaIconsPack} />
-    <ApplicationProvider {...eva} theme={eva.light}>  
-      <Stack.Navigator initialRouteName="LoginScreen">
-        <Stack.Screen name="LoginScreen" component={Login} />
-        <Stack.Screen name="HomeScreen" component={Home} />
-      </Stack.Navigator>
-    </ApplicationProvider>
-  </NavigationContainer>
-);
+
+export default function App() {
+
+  return (
+    <GlobalState>
+      <NavigationContainer>
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider {...eva} theme={eva.light}>
+          <MainNavigator />
+        </ApplicationProvider>
+      </NavigationContainer>
+    </GlobalState>)
+}
+// export default function App() {
+//   return (
+//     <View >
+//       <Text>Open up App.js to start working on your app!</Text>
+//     </View>
+//   );
+// }
