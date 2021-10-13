@@ -4,7 +4,7 @@ export const GlobalContext = createContext();
 
 
 function GlobalState(props) {
-  const [loginData, setLoginData] = React.useState({ isLogin: true });
+  const [loginData, setLoginData] = React.useState({ isLogin: false });
   return (
     <GlobalContext.Provider
       value={{ loginData: loginData, setLoginData: setLoginData }}
