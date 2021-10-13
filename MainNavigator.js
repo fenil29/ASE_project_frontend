@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import Login from './screens/Login';
 import Dashboard from './screens/Dashboard';
 import FaceCamera from './screens/FaceCamera';
+import Account from './screens/Account';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GlobalContext } from "./context/GlobalState";
@@ -23,9 +24,10 @@ function HomeScreen() {
 
           if (route.name === 'Dashboard') {
             iconName = focused ? 'calendar' : 'calendar-outline';
-
           } else if (route.name === 'FaceCamera') {
             iconName = focused ? 'camera' : 'camera-outline';
+          } else if (route.name === 'Account'){
+            iconName = focused ? 'person' : 'person-outline';
           }
 
           // You can return any component that you like here!
@@ -43,6 +45,7 @@ function HomeScreen() {
       >
         <Tab.Screen name="Dashboard" component={Dashboard} />
         <Tab.Screen name="FaceCamera" component={FaceCamera} />
+        <Tab.Screen name="Account" component={Account} />
       </Tab.Navigator>
     );
   }
