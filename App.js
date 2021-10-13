@@ -28,8 +28,6 @@ import MainNavigator from './MainNavigator';
 
 import GlobalState from "./context/GlobalState";
 
-
-
 export default function App() {
 
   return (

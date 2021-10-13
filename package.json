@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",
+    "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.5",
     "@react-navigation/native-stack": "^6.2.3",
     "@ui-kitten/components": "^5.1.1",
