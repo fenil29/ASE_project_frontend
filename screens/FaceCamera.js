@@ -158,17 +158,9 @@ export default function FaceCamera() {
                 );
               }}
             >
-              <View
-                style={{
-                  borderColor: "white",
-                  borderStyle: "solid",
-                  borderWidth: "1px",
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              >
-                <Icon style={styles.icon} fill="white" name="flip-2-outline" />
-              </View>
+              
+            <Icon style={styles.icon} fill="white" name="flip-2-outline" />
+             
             </TouchableOpacity>
             <TouchableOpacity
               style={{ position: "absolute", bottom: 20, right: 100 }}
