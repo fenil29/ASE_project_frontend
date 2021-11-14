@@ -44,7 +44,7 @@ function HomeScreen() {
       })}
       >
         <Tab.Screen name="Dashboard" component={Dashboard} />
-        <Tab.Screen name="FaceCamera" component={FaceCamera} />
+        <Tab.Screen name="FaceCamera" component={FaceCamera} options={{unmountOnBlur: true}}/>
         <Tab.Screen name="Account" component={Account} />
       </Tab.Navigator>
     );

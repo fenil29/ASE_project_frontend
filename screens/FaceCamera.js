@@ -192,17 +192,9 @@ export default function FaceCamera() {
                 );
               }}
             >
-              <View
-                style={{
-                  borderColor: "white",
-                  borderStyle: "solid",
-                  borderWidth: "1px",
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              >
-                <Icon style={styles.icon} fill="white" name="flip-2-outline" />
-              </View>
+              
+            <Icon style={styles.icon} fill="white" name="flip-2-outline" />
+             
             </TouchableOpacity>
             <TouchableOpacity
               style={{ position: "absolute", bottom: 20, right: 100 }}
@@ -298,5 +290,22 @@ const styles = StyleSheet.create({
   icon: {
     width: 27,
     height: 27,
+  },
+  container: {
+    flex: 1,
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    margin: 20,
+  },
+  button: {
+    flex: 0.1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
   },
 });
