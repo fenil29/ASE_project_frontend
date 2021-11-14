@@ -16,10 +16,11 @@ import * as ImageManipulator from "expo-image-manipulator";
 
 export default function FaceCamera() {
   const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.front);
+  const [type, setType] = useState(Camera.Constants.Type.back);
   const [capturedImage, setCapturedImage] = useState(null);
   const [camera, setCamera] = useState(null);
   const [faceBox, setFaceBox] = useState(null);
+  const [vaccineInfo, setVaccineInfo] = useState(null);
 
   //   let camera;
   useEffect(() => {
@@ -27,13 +28,13 @@ export default function FaceCamera() {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
-    const interval = setInterval(() => {
+    // const interval = setInterval(() => {
       setCamera((camera) => {
         __takePicture(camera);
         return camera;
       });
-    }, 3000);
-    return () => clearInterval(interval);
+    // }, 3000);
+    // return () => clearInterval(interval);
   }, []);
 
   if (hasPermission === null) {
@@ -61,9 +62,8 @@ export default function FaceCamera() {
     formData.append("api_key", "M3gDEiQdtRKNbEuRDIm3oB46IgLufN36");
     formData.append("api_secret", "0o2e8yd-ucHHUD41W69PgAjjtc_Rhigt");
 
-    console.log(photo.width);
-    console.log(photo.height);
-    setCapturedImage(photo);
+    // console.log(photo.width);
+    // console.log(photo.height);
     // let base64Img = `data:image/jpg;base64,${source}`;
     // let data = {
     //     image_base64: base64Img,
@@ -72,25 +72,59 @@ export default function FaceCamera() {
     //   };
 
     // axios.post(`https://api-us.faceplusplus.com/facepp/v3/detect`, { formData })
+    // axios({
+    //   method: "post",
+    //   url: "https://api-us.faceplusplus.com/facepp/v3/detect",
+    //   data: formData,
+    //   headers: { "Content-Type": "multipart/form-data" },
+    // })
+    //   .then((res) => {
+    //     // console.log(res);
+    //     // console.log(res.data);
+    //     if (res.data.face_num == 1) {
+    //       setFaceBox(res.data.faces[0].face_rectangle);
+    //       // console.log(res.data.faces[0].face_rectangle);
+    //     }
+       
+    //   })
+    //   .catch((err) => {
+    //     // alert("Cannot upload", JSON.stringify(err));
+    //     console.log(err);
+    //     if (err.response) {
+    //       console.log(err.response.data); // => the response payload
+    //     }
+    //   });
+    formData.append("faceset_token", "d3c8ad66b8f9d934da0df6f408c7f8b1");
     axios({
       method: "post",
-      url: "https://api-us.faceplusplus.com/facepp/v3/detect",
+      url: "https://api-us.faceplusplus.com/facepp/v3/search",
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     })
-      .then((res) => {
+      .then((res2) => {
         // console.log(res);
-        console.log(res.data);
-        if (res.data.face_num == 1) {
-          setFaceBox(res.data.faces[0].face_rectangle);
-          console.log(res.data.faces[0].face_rectangle);
+        console.log(res2.data);
+                if (res2.data.faces && res2.data.faces.length > 0) {
+          setFaceBox(res2.data.faces[0].face_rectangle);
+          // console.log(res.data.faces[0].face_rectangle);
+          // vaccineInfo
+          if(res2.data.results.length > 0 && res2.data.results[0].confidence>res2.data.thresholds["1e-5"]){
+            
+            setVaccineInfo({isVaccinated:true,face_token:res2.data.results[0].face_token})
+          }
         }
+        // if (res.data.face_num == 1) {
+        //   // setFaceBox(res.data.faces[0].face_rectangle);
+        //   // console.log(res.data.faces[0].face_rectangle);
+        // }
+        setCapturedImage(photo);
+
       })
-      .catch((err) => {
+      .catch((err2) => {
         // alert("Cannot upload", JSON.stringify(err));
-        console.log(err);
-        if (err.response) {
-          console.log(err.response.data); // => the response payload
+        console.log(err2);
+        if (err2.response) {
+          console.log(err2.response.data); // => the response payload
         }
       });
     // fetch("https://api-us.faceplusplus.com/facepp/v3/detect", {
@@ -191,6 +225,28 @@ export default function FaceCamera() {
           </View>
         </Camera>
       </View>
+      <TouchableOpacity
+              style={{ position: "absolute", top: 20, left: 20,zIndex:10 }}
+
+              onPress={() => {
+                setCamera((camera) => {
+                  __takePicture(camera);
+                  return camera;
+                });
+              }}
+            >
+              <View
+                style={{
+                  borderColor: "white",
+                  borderStyle: "solid",
+                  borderWidth: "1px",
+                  padding: 10,
+                  borderRadius: 5,
+                }}
+              >
+                <Icon style={styles.icon} fill="white" name="camera-outline" />
+              </View>
+            </TouchableOpacity>
       {capturedImage && (
         <>
           {/* <ImageBackground
@@ -214,7 +270,7 @@ export default function FaceCamera() {
               style={{
                 borderColor: "red",
                 borderStyle: "solid",
-                borderWidth: "10px",
+                borderWidth: "4px",
                 // padding: 10,
                 margin: "10px",
                 borderRadius: 5,
@@ -229,7 +285,9 @@ export default function FaceCamera() {
                 top: `${Number(faceBox.top) / (capturedImage.height/100)}%`,
                 bottom: `${100-(Number(faceBox.top) / (capturedImage.height/100) + Number(faceBox.height) /  (capturedImage.height/100))}%`,
               }}
-            ></View>
+            >
+              {vaccineInfo.face_token && <Text>{vaccineInfo.face_token}</Text>}
+            </View>
           )}
         </>
       )}
