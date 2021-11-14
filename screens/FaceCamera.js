@@ -9,10 +9,24 @@ import {
   Image,
 } from "react-native";
 import { Camera } from "expo-camera";
-import { Icon } from "@ui-kitten/components";
+import { Icon, Layout, Spinner } from "@ui-kitten/components";
 import axios from "axios";
 import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
 import * as ImageManipulator from "expo-image-manipulator";
+
+personData = {
+  "d9cad8113495924deb71866fdf20f592": "Amir",
+  "13277a9fa5f57a62e12448cc8a720693": "akshay",
+  "c77c44564de4b43738e195c547e68d16": "alia",
+  "dc1eeec115d614d8745e7503987fcbc9": "Amitabh",
+  "6c1a31b03cf112caf4231b3a1aafd42c": "Hritik",
+  "d775c1db22ae162c82c2a62c6a095b58": "Kareena",
+  "c937e97caac871dc9c6a9fbb81adc028": "Kriti",
+  "9053b9da50c608a5022d5f5f4c8763d6": "Salman",
+  "1ad24f20921d0c409ae922cb5746b14c": "Shahrukh",
+  "72056b0df88ab5cdc0866b9c56f26966": "Saif Ali khan",
+  "6022d052cce8924ff2d1363c1eeafdff": "Jigar",
+};
 
 export default function FaceCamera() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -20,7 +34,8 @@ export default function FaceCamera() {
   const [capturedImage, setCapturedImage] = useState(null);
   const [camera, setCamera] = useState(null);
   const [faceBox, setFaceBox] = useState(null);
-  const [vaccineInfo, setVaccineInfo] = useState(null);
+  const [vaccineInfo, setVaccineInfo] = useState({});
+  const [loading, setLoading] = useState(false);
 
   //   let camera;
   useEffect(() => {
@@ -29,10 +44,10 @@ export default function FaceCamera() {
       setHasPermission(status === "granted");
     })();
     // const interval = setInterval(() => {
-      setCamera((camera) => {
-        __takePicture(camera);
-        return camera;
-      });
+    // setCamera((camera) => {
+    //   __takePicture(camera);
+    //   return camera;
+    // });
     // }, 3000);
     // return () => clearInterval(interval);
   }, []);
@@ -45,6 +60,7 @@ export default function FaceCamera() {
   }
   //   const __takePicture = async () => {
   async function __takePicture(cameralocal) {
+    setLoading(true);
     // console.log(cameralocal)
 
     if (!cameralocal) return;
@@ -85,7 +101,7 @@ export default function FaceCamera() {
     //       setFaceBox(res.data.faces[0].face_rectangle);
     //       // console.log(res.data.faces[0].face_rectangle);
     //     }
-       
+
     //   })
     //   .catch((err) => {
     //     // alert("Cannot upload", JSON.stringify(err));
@@ -103,14 +119,21 @@ export default function FaceCamera() {
     })
       .then((res2) => {
         // console.log(res);
+        setLoading(false);
         console.log(res2.data);
-                if (res2.data.faces && res2.data.faces.length > 0) {
+
+        if (res2.data.faces && res2.data.faces.length > 0) {
           setFaceBox(res2.data.faces[0].face_rectangle);
           // console.log(res.data.faces[0].face_rectangle);
           // vaccineInfo
-          if(res2.data.results.length > 0 && res2.data.results[0].confidence>res2.data.thresholds["1e-5"]){
-            
-            setVaccineInfo({isVaccinated:true,face_token:res2.data.results[0].face_token})
+          if (
+            res2.data.results.length > 0 &&
+            res2.data.results[0].confidence > res2.data.thresholds["1e-5"]
+          ) {
+            setVaccineInfo({
+              isVaccinated: true,
+              face_token: res2.data.results[0].face_token,
+            });
           }
         }
         // if (res.data.face_num == 1) {
@@ -118,7 +141,6 @@ export default function FaceCamera() {
         //   // console.log(res.data.faces[0].face_rectangle);
         // }
         setCapturedImage(photo);
-
       })
       .catch((err2) => {
         // alert("Cannot upload", JSON.stringify(err));
@@ -182,7 +204,7 @@ export default function FaceCamera() {
           }}
         >
           <View style={{ height: "100%" }}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{ position: "absolute", bottom: 20, right: 20 }}
               onPress={() => {
                 setType(
@@ -192,9 +214,7 @@ export default function FaceCamera() {
                 );
               }}
             >
-              
-            <Icon style={styles.icon} fill="white" name="flip-2-outline" />
-             
+              <Icon style={styles.icon} fill="white" name="flip-2-outline" />
             </TouchableOpacity>
             <TouchableOpacity
               style={{ position: "absolute", bottom: 20, right: 100 }}
@@ -213,32 +233,36 @@ export default function FaceCamera() {
               >
                 <Icon style={styles.icon} fill="white" name="flip-2-outline" />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </Camera>
       </View>
-      <TouchableOpacity
-              style={{ position: "absolute", top: 20, left: 20,zIndex:10 }}
-
-              onPress={() => {
-                setCamera((camera) => {
-                  __takePicture(camera);
-                  return camera;
-                });
-              }}
-            >
-              <View
-                style={{
-                  borderColor: "white",
-                  borderStyle: "solid",
-                  borderWidth: "1px",
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              >
-                <Icon style={styles.icon} fill="white" name="camera-outline" />
-              </View>
-            </TouchableOpacity>
+      <View
+          style={{
+            borderColor: "white",
+            borderStyle: "solid",
+            borderWidth: 1,
+            padding: 10,
+            borderRadius: 5,
+          }}
+        >
+      {/* <TouchableOpacity
+        style={{ position: "absolute", top: 20, left: 20, zIndex: 10 }}
+        onPress={() => {
+          setCamera((camera) => {
+            __takePicture(camera);
+            return camera;
+          });
+        }}
+      >
+       
+          {loading ? (
+            <Spinner size="small" />
+          ) : (
+            <Icon style={styles.icon} fill="white" name="camera-outline" />
+          )}
+      </TouchableOpacity> */}
+        </View>
       {capturedImage && (
         <>
           {/* <ImageBackground
@@ -278,7 +302,16 @@ export default function FaceCamera() {
                 bottom: `${100-(Number(faceBox.top) / (capturedImage.height/100) + Number(faceBox.height) /  (capturedImage.height/100))}%`,
               }}
             >
-              {vaccineInfo.face_token && <Text>{vaccineInfo.face_token}</Text>}
+              {vaccineInfo.face_token && (
+                <Text
+                  style={{
+                    color: "red",
+                    fontSize:20
+                  }}
+                >
+                  {personData[vaccineInfo.face_token]}
+                </Text>
+              )}
             </View>
           )}
         </>
@@ -299,13 +332,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
+    backgroundColor: "transparent",
+    flexDirection: "row",
     margin: 20,
   },
   button: {
     flex: 0.1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
+    alignSelf: "flex-end",
+    alignItems: "center",
   },
 });
