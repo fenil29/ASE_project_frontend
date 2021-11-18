@@ -28,6 +28,160 @@ personData = {
   "6022d052cce8924ff2d1363c1eeafdff": "Jigar",
 };
 
+vaccineData=[
+  {
+    "dateOfBirth" : "1972-01-22",
+    "fullName" : "Amir",
+    "faceId" : "d9cad8113495924deb71866fdf20f592",
+    "status" : "FULLY_VACCINATED",
+    "vaccineDoses": [
+      {
+        "vaccineName": "AstraZeneca",
+        "date": "2021-04-20",
+        "lotNumber": "731648"
+      },
+      {
+        "vaccineName": "AstraZeneca",
+        "date": "2021-07-30",
+        "lotNumber": "788134"
+      }
+    ]
+  },
+  {
+    "dateOfBirth" : "1970-05-12",
+    "fullName" : "Akshay",
+    "faceId" : "13277a9fa5f57a62e12448cc8a720693",
+    "status" : "NOT_VACCINATED",
+    "vaccineDoses": []
+  },
+  {
+    "dateOfBirth" : "1999-06-11",
+    "fullName" : "Alia",
+    "faceId" : "c77c44564de4b43738e195c547e68d16",
+    "status" : "FULLY_VACCINATED",
+    "vaccineDoses": [
+      {
+        "vaccineName": "Pfizer",
+        "date": "2021-06-28",
+        "lotNumber": "500648"
+      },
+      {
+        "vaccineName": "Pfizer",
+        "date": "2021-09-01",
+        "lotNumber": "551184"
+      }
+    ]
+  },
+  {
+    "dateOfBirth" : "1960-02-12",
+    "fullName" : "Amitabh",
+    "faceId" : "dc1eeec115d614d8745e7503987fcbc9",
+    "status" : "PARTIALLY_VACCINATED",
+    "vaccineDoses": [
+      {
+        "vaccineName": "AstraZeneca",
+        "date": "2021-03-04",
+        "lotNumber": "600648"
+      }
+    ]
+  },
+  {
+    "dateOfBirth" : "1975-05-23",
+    "fullName" : "Hritik",
+    "faceId" : "6c1a31b03cf112caf4231b3a1aafd42c",
+    "status" : "NOT_VACCINATED",
+    "vaccineDoses": []
+  },
+  {
+    "dateOfBirth" : "1982-05-22",
+    "fullName" : "Kareena",
+    "faceId" : "d775c1db22ae162c82c2a62c6a095b58",
+    "status" : "FULLY_VACCINATED",
+    "vaccineDoses": [
+      {
+        "vaccineName": "AstraZeneca",
+        "date": "2021-05-15",
+        "lotNumber": "600648"
+      },
+      {
+        "vaccineName": "AstraZeneca",
+        "date": "2021-08-26",
+        "lotNumber": "655184"
+      }
+    ]
+  },
+  {
+    "dateOfBirth" : "1995-03-12",
+    "fullName" : "Kriti",
+    "faceId" : "c937e97caac871dc9c6a9fbb81adc028",
+    "status" : "NOT_VACCINATED",
+    "vaccineDoses": []
+  },
+  {
+    "dateOfBirth" : "1969-07-05",
+    "fullName" : "Salman",
+    "faceId" : "9053b9da50c608a5022d5f5f4c8763d6",
+    "status" : "PARTIALLY_VACCINATED",
+    "vaccineDoses": [
+      {
+        "vaccineName": "Pfizer",
+        "date": "2021-04-10",
+        "lotNumber": "520648"
+      }
+    ]
+  },
+  {
+    "dateOfBirth" : "1967-08-09",
+    "fullName" : "Shahrukh",
+    "faceId" : "1ad24f20921d0c409ae922cb5746b14c",
+    "status" : "FULLY_VACCINATED",
+    "vaccineDoses": [
+      {
+        "vaccineName": "Moderna",
+        "date": "2021-03-28",
+        "lotNumber": "320648"
+      },
+      {
+        "vaccineName": "Moderna",
+        "date": "2021-05-01",
+        "lotNumber": "341184"
+      }
+    ]
+  },
+  {
+    "dateOfBirth" : "1973-01-10",
+    "fullName" : "Saif Ali khan",
+    "faceId" : "72056b0df88ab5cdc0866b9c56f26966",
+    "status" : "FULLY_VACCINATED",
+    "vaccineDoses": [
+      {
+        "vaccineName": "Moderna",
+        "date": "2021-04-28",
+        "lotNumber": "330648"
+      },
+      {
+        "vaccineName": "Moderna",
+        "date": "2021-06-05",
+        "lotNumber": "358184"
+      }
+    ]
+  },
+  {
+    "dateOfBirth" : "1998-01-11",
+    "fullName" : "Jigar",
+    "faceId" : "6022d052cce8924ff2d1363c1eeafdff",
+    "status" : "PARTIALLY_VACCINATED",
+    "vaccineDoses": [
+      {
+        "vaccineName": "AstraZeneca",
+        "date": "2021-05-02",
+        "lotNumber": "630648"
+      }
+    ]
+  }   
+]
+
+
 export default function FaceCamera() {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -36,6 +190,7 @@ export default function FaceCamera() {
   const [faceBox, setFaceBox] = useState(null);
   const [vaccineInfo, setVaccineInfo] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isVaccinated, setIsVaccinated] = useState(false);
 
   //   let camera;
   useEffect(() => {
@@ -64,14 +219,14 @@ export default function FaceCamera() {
     // console.log(cameralocal)
 
     if (!cameralocal) return;
-    const options = { quality: 0.1, base64: true };
+    const options = { quality: 0.1, base64: true,skipProcessing: true };
     let photo = await cameralocal.takePictureAsync(options);
-
+// return;
     photo = await ImageManipulator.manipulateAsync(
       photo.uri,
       [{ resize: { width: 300 } }], // resize to width of 300 and preserve aspect ratio
       { compress: 0.7, format: "jpeg", base64: true }
-    );
+    ); 
     // console.log(photo.base64);
     let formData = new FormData();
     formData.append("image_base64", photo.base64);
@@ -134,6 +289,13 @@ export default function FaceCamera() {
               isVaccinated: true,
               face_token: res2.data.results[0].face_token,
             });
+            setIsVaccinated(false)
+            console.log(vaccineData.find(x=>x.faceId==res2.data.results[0].face_token));
+            if(vaccineData.find(x=>x.faceId==res2.data.results[0].face_token)){
+              if(vaccineData.find(x=>x.faceId==res2.data.results[0].face_token).status=="FULLY_VACCINATED")
+              {setIsVaccinated(true);}
+            }
+            
           }
         }
         // if (res.data.face_num == 1) {
@@ -196,6 +358,8 @@ export default function FaceCamera() {
     <View style={{ height: "100%" }}>
       <View style={{ height: "30%", width: "30%", display: "none" }}>
         <Camera
+        ratio="1:1"
+
           type={type}
           // style={{ height: "10%",width:"50%" }}
           ref={(r) => {
@@ -204,7 +368,7 @@ export default function FaceCamera() {
           }}
         >
           <View style={{ height: "100%" }}>
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={{ position: "absolute", bottom: 20, right: 20 }}
               onPress={() => {
                 setType(
@@ -226,27 +390,18 @@ export default function FaceCamera() {
                 style={{
                   borderColor: "white",
                   borderStyle: "solid",
-                  borderWidth: "1px",
+                  borderWidth: 1,
                   padding: 10,
                   borderRadius: 5,
                 }}
               >
                 <Icon style={styles.icon} fill="white" name="flip-2-outline" />
               </View>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
         </Camera>
       </View>
-      <View
-          style={{
-            borderColor: "white",
-            borderStyle: "solid",
-            borderWidth: 1,
-            padding: 10,
-            borderRadius: 5,
-          }}
-        >
-      {/* <TouchableOpacity
+      <TouchableOpacity
         style={{ position: "absolute", top: 20, left: 20, zIndex: 10 }}
         onPress={() => {
           setCamera((camera) => {
@@ -255,14 +410,22 @@ export default function FaceCamera() {
           });
         }}
       >
-       
+        <View
+          style={{
+            borderColor: "white",
+            borderStyle: "solid",
+            borderWidth: 1,
+            padding: 10,
+            borderRadius: 5,
+          }}
+        >
           {loading ? (
             <Spinner size="small" />
           ) : (
             <Icon style={styles.icon} fill="white" name="camera-outline" />
           )}
-      </TouchableOpacity> */}
         </View>
+      </TouchableOpacity>
       {capturedImage && (
         <>
           {/* <ImageBackground
@@ -284,11 +447,11 @@ export default function FaceCamera() {
           {faceBox && faceBox.left && (
             <View
               style={{
-                borderColor: "red",
+                borderColor: isVaccinated?"green":"red",
                 borderStyle: "solid",
-                borderWidth: "4px",
+                borderWidth: 4,
                 // padding: 10,
-                margin: "10px",
+                margin: 10,
                 borderRadius: 5,
                 position: "absolute",
                 // top: 10, left: 10,
