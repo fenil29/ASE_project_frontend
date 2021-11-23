@@ -1,6 +1,7 @@
 import React,{useContext} from 'react'
 import { StyleSheet } from 'react-native';
 import Login from './screens/Login';
+import AddVaccineDetails from './screens/AddVaccineDetails';
 import Dashboard from './screens/Dashboard';
 import FaceCamera from './screens/FaceCamera';
 import Account from './screens/Account';
@@ -66,6 +67,7 @@ function MainNavigator() {
                     <Stack.Screen name="HomeScreen" component={HomeScreen} />
                 </>
             )}
+            <Stack.Screen name="AddVaccineDetails" component={AddVaccineDetails} />
         </Stack.Navigator>
     )
 }
