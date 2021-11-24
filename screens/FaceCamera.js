@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -183,6 +183,7 @@ vaccineData=[
 
 
 export default function FaceCamera() {
+  const cameraRef = useRef();
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -198,13 +199,6 @@ export default function FaceCamera() {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
-    // const interval = setInterval(() => {
-    // setCamera((camera) => {
-    //   __takePicture(camera);
-    //   return camera;
-    // });
-    // }, 3000);
-    // return () => clearInterval(interval);
   }, []);
 
   if (hasPermission === null) {
@@ -233,38 +227,6 @@ export default function FaceCamera() {
     formData.append("api_key", "M3gDEiQdtRKNbEuRDIm3oB46IgLufN36");
     formData.append("api_secret", "0o2e8yd-ucHHUD41W69PgAjjtc_Rhigt");
 
-    // console.log(photo.width);
-    // console.log(photo.height);
-    // let base64Img = `data:image/jpg;base64,${source}`;
-    // let data = {
-    //     image_base64: base64Img,
-    //     api_key: 'M3gDEiQdtRKNbEuRDIm3oB46IgLufN36',
-    //     api_secret: '0o2e8yd-ucHHUD41W69PgAjjtc_Rhigt'
-    //   };
-
-    // axios.post(`https://api-us.faceplusplus.com/facepp/v3/detect`, { formData })
-    // axios({
-    //   method: "post",
-    //   url: "https://api-us.faceplusplus.com/facepp/v3/detect",
-    //   data: formData,
-    //   headers: { "Content-Type": "multipart/form-data" },
-    // })
-    //   .then((res) => {
-    //     // console.log(res);
-    //     // console.log(res.data);
-    //     if (res.data.face_num == 1) {
-    //       setFaceBox(res.data.faces[0].face_rectangle);
-    //       // console.log(res.data.faces[0].face_rectangle);
-    //     }
-
-    //   })
-    //   .catch((err) => {
-    //     // alert("Cannot upload", JSON.stringify(err));
-    //     console.log(err);
-    //     if (err.response) {
-    //       console.log(err.response.data); // => the response payload
-    //     }
-    //   });
     formData.append("faceset_token", "d3c8ad66b8f9d934da0df6f408c7f8b1");
     axios({
       method: "post",
@@ -298,10 +260,7 @@ export default function FaceCamera() {
             
           }
         }
-        // if (res.data.face_num == 1) {
-        //   // setFaceBox(res.data.faces[0].face_rectangle);
-        //   // console.log(res.data.faces[0].face_rectangle);
-        // }
+
         setCapturedImage(photo);
       })
       .catch((err2) => {
@@ -311,103 +270,37 @@ export default function FaceCamera() {
           console.log(err2.response.data); // => the response payload
         }
       });
-    // fetch("https://api-us.faceplusplus.com/facepp/v3/detect", {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: formData,
-    // })
-    //   .then(async (response) => {
-    //     let data = await response.json();
-    //     if (data) {
-    //       //   alert(JSON.stringify(data));
-    //       //   console.log(data);
-    //       //   data example
-    //       //   Object {
-    //       //     "face_num": 1,
-    //       //     "faces": Array [
-    //       //       Object {
-    //       //         "face_rectangle": Object {
-    //       //           "height": 445,
-    //       //           "left": 84,
-    //       //           "top": 672,
-    //       //           "width": 445,
-    //       //         },
-    //       //         "face_token": "807891ad0ea241917ff8074bdd3c68e7",
-    //       //       },
-    //       //     ],
-    //       //     "image_id": "cEWlW5zpXV24LFxVIgamLA==",
-    //       //     "request_id": "1635826848,22107841-38c8-45b9-9f23-ca5e617d94c0",
-    //       //     "time_used": 61,
-    //       //   }
-    //       if (data.face_num == 1) {
-    //         setFaceBox(data.faces[0].face_rectangle);
-    //         console.log(data.faces[0].face_rectangle);
-    //       }
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     // alert("Cannot upload", JSON.stringify(err));
-    //     console.log(err);
-    //   });
-  }
 
+  }
+  const onSnap = async () => {
+    if (cameraRef.current) {
+      const options = { quality: 0.7, base64: true };
+      const data = await cameraRef.current.takePictureAsync(options);
+      const source = data.base64;
+  
+      if (source) {
+        await cameraRef.current.pausePreview();
+        setIsPreview(true);
+      }
+    }
+  };
   return (
     <View style={{ height: "100%" }}>
       <View style={{ height: "30%", width: "30%", display: "none" }}>
         <Camera
-        ratio="1:1"
-
           type={type}
-          // style={{ height: "10%",width:"50%" }}
-          ref={(r) => {
-            // camera = r;
-            setCamera(r);
-          }}
-        >
-          <View style={{ height: "100%" }}>
-            <TouchableOpacity
-              style={{ position: "absolute", bottom: 20, right: 20 }}
-              onPress={() => {
-                setType(
-                  type === Camera.Constants.Type.back
-                    ? Camera.Constants.Type.front
-                    : Camera.Constants.Type.back
-                );
-              }}
-            >
-              <Icon style={styles.icon} fill="white" name="flip-2-outline" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ position: "absolute", bottom: 20, right: 100 }}
-              onPress={() => {
-                __takePicture();
-              }}
-            >
-              <View
-                style={{
-                  borderColor: "white",
-                  borderStyle: "solid",
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              >
-                <Icon style={styles.icon} fill="white" name="flip-2-outline" />
-              </View>
-            </TouchableOpacity>
-          </View>
-        </Camera>
+          ref={cameraRef}
+        />
+        
       </View>
       <TouchableOpacity
         style={{ position: "absolute", top: 20, left: 20, zIndex: 10 }}
         onPress={() => {
-          setCamera((camera) => {
-            __takePicture(camera);
-            return camera;
-          });
+          // setCamera((camera) => {
+          //   __takePicture(camera);
+          //   return camera;
+          // });
+          onSnap();
         }}
       >
         <View
@@ -482,6 +375,7 @@ export default function FaceCamera() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   icon: {
     width: 27,
