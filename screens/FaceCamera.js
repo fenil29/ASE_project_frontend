@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect,useRef,useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,6 +13,9 @@ import { Icon, Layout, Spinner } from "@ui-kitten/components";
 import axios from "axios";
 import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
 import * as ImageManipulator from "expo-image-manipulator";
+
+import { GlobalContext } from "../context/GlobalState";
+
 
 personData = {
   "d9cad8113495924deb71866fdf20f592": "Amir",
@@ -183,6 +186,8 @@ vaccineData=[
 
 
 export default function FaceCamera() {
+  const contextStore = useContext(GlobalContext);
+
   const cameraRef = useRef();
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -220,7 +225,7 @@ export default function FaceCamera() {
       photo.uri,
       [{ resize: { width: 300 } }], // resize to width of 300 and preserve aspect ratio
       { compress: 0.7, format: "jpeg", base64: true }
-    ); 
+    );
     // console.log(photo.base64);
     let formData = new FormData();
     formData.append("image_base64", photo.base64);
@@ -262,6 +267,7 @@ export default function FaceCamera() {
         }
 
         setCapturedImage(photo);
+        contextStore.appendPhoto(photo);
       })
       .catch((err2) => {
         // alert("Cannot upload", JSON.stringify(err));
