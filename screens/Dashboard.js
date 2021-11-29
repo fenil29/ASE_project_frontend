@@ -38,7 +38,7 @@ function Home() {
         <PhotoGrid />
       </Layout>
 
-      <Layout style={styles.layout} level="2">
+      {/* <Layout style={styles.layout} level="2">
         <Text
           style={{
             fontWeight: "bold",
@@ -48,7 +48,7 @@ function Home() {
           Activity Log
         </Text>
         <Graph />
-      </Layout>
+      </Layout> */}
     </Layout>
   );
 }
