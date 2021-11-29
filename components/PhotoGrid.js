@@ -1,5 +1,5 @@
-import React,{useContext} from "react";
-import { View, Text, StyleSheet,ImageBackground } from "react-native";
+import React, { useContext } from "react";
+import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import { FlatGrid } from "react-native-super-grid";
 import { GlobalContext } from "../context/GlobalState";
 
@@ -26,29 +26,47 @@ function PhotoGrid() {
     <>
       {contextStore.photos.length > 0 && (
         <FlatGrid
-
           itemDimension={110}
           data={contextStore.photos}
-          style={{width:"100%"}}
+          style={{ width: "100%" }}
           // staticDimension={300}
           // fixed
           spacing={5}
           renderItem={({ item }) => (
-            // <View style={[styles.itemContainer, { backgroundColor: item.code }]}>
-            // <Text style={styles.itemName}>{item.name}</Text>
-            // <Text style={styles.itemCode}>{item.code}</Text>
-            // </View>
-            <ImageBackground
-            style={styles.itemContainer}
-              source={{ uri: item && item.uri }}
-              // style={{ width: "100%" }}
-            //   style={{ height: "100%", width: "100%" }}
-              // style={{
-              //   // flex: 1,
-              //   width:100,
-              //   height:100,
-              // }}
-            />
+            <>
+              {/* //{" "}
+              <View
+                style={[styles.itemContainer, { backgroundColor: item.code }]}
+              >
+                // <Text style={styles.itemName}>{item.name}</Text>
+                // <Text style={styles.itemCode}>{item.code}</Text>
+                //{" "}
+              </View> */}
+              <ImageBackground
+                style={{
+                    // justifyContent: "flex-end",
+                    // borderRadius: 5,
+                    // padding: 10,
+                    height: 200,
+                    // width: 120,
+                    // position: "absolute",
+                    borderStyle: "solid",
+                    borderWidth: 4,
+                    borderColor: item[1]?"green":"red",
+                  }}
+                source={{ uri: item[0] && item[0].uri }}
+                // style={{ width: "100%" }}
+                //   style={{ height: "100%", width: "100%" }}
+                // style={{
+                //   // flex: 1,
+                //   width:100,
+                //   height:100,
+                // }}
+              />
+              {/* <Text style={styles.itemName}>Fenil</Text>
+              <Text style={styles.itemCode}>fenil</Text> */}
+
+            </>
           )}
         />
       )}
@@ -60,11 +78,15 @@ export default PhotoGrid;
 
 const styles = StyleSheet.create({
   itemContainer: {
-    justifyContent: "flex-end",
-    borderRadius: 5,
-    padding: 10,
-    height: 150,
-    // width:100
+    // justifyContent: "flex-end",
+    // borderRadius: 5,
+    // padding: 10,
+    height: 200,
+    // width: 120,
+    // position: "absolute",
+    borderStyle: "solid",
+    borderWidth: 4,
+    borderColor:"red"
   },
   itemName: {
     fontSize: 16,

@@ -257,17 +257,21 @@ export default function FaceCamera() {
               face_token: res2.data.results[0].face_token,
             });
             setIsVaccinated(false)
+        contextStore.appendPhoto([photo,false]);
+
             console.log(vaccineData.find(x=>x.faceId==res2.data.results[0].face_token));
             if(vaccineData.find(x=>x.faceId==res2.data.results[0].face_token)){
               if(vaccineData.find(x=>x.faceId==res2.data.results[0].face_token).status=="FULLY_VACCINATED")
-              {setIsVaccinated(true);}
+              {setIsVaccinated(true);
+        contextStore.appendPhoto([photo,true]);
+              
+              }
             }
             
           }
         }
 
         setCapturedImage(photo);
-        contextStore.appendPhoto(photo);
       })
       .catch((err2) => {
         // alert("Cannot upload", JSON.stringify(err));
