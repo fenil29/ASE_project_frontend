@@ -208,14 +208,14 @@ export default function FaceCamera() {
     return <Text>No access to camera</Text>;
   }
   //   const __takePicture = async () => {
-  async function __takePicture(cameralocal) {
+  async function __takePicture() {
     setLoading(true);
     // console.log(cameralocal)
 
-    if (!cameralocal) return;
-    const options = { quality: 0.1, base64: true,skipProcessing: true };
-    let photo = await cameralocal.takePictureAsync(options);
-// return;
+    if (!cameraRef) return;
+    const options = { quality: 0.7, base64: true,skipProcessing: true };
+    let photo = await cameraRef.current.takePictureAsync(options);
+    // return;
     photo = await ImageManipulator.manipulateAsync(
       photo.uri,
       [{ resize: { width: 300 } }], // resize to width of 300 and preserve aspect ratio
@@ -272,18 +272,7 @@ export default function FaceCamera() {
       });
 
   }
-  const onSnap = async () => {
-    if (cameraRef.current) {
-      const options = { quality: 0.7, base64: true };
-      const data = await cameraRef.current.takePictureAsync(options);
-      const source = data.base64;
-  
-      if (source) {
-        await cameraRef.current.pausePreview();
-        setIsPreview(true);
-      }
-    }
-  };
+
   return (
     <View style={{ height: "100%" }}>
       <View style={{ height: "30%", width: "30%", display: "none" }}>
@@ -300,7 +289,7 @@ export default function FaceCamera() {
           //   __takePicture(camera);
           //   return camera;
           // });
-          onSnap();
+          __takePicture();
         }}
       >
         <View
